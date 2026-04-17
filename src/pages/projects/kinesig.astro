@@ -25,17 +25,16 @@ import '../../styles/global.css';
   <section class="card mb-6">
     <h2 class="text-lg font-semibold text-sky-400 mb-3">Overview</h2>
     <p class="text-[#8b949e] leading-relaxed mb-3">
-      KineSig (Kinematic Behavior Classification) processes pose data from 108 actors performing
-      12 distinct emotions — approximately 1.6 million frames total, captured via OpenPose and MediaPipe.
-      The pipeline computes velocity and acceleration time series for each body region, builds
-      pairwise distance matrices across participants, clusters them, and tests whether cluster
-      membership predicts scores on autism-relevant psychometric instruments.
+      KineSig is the current form of a pipeline that began as the computational core behind a
+      published paper in <em>Frontiers in Integrative Neuroscience</em> (2024), was extended and
+      submitted to CVPR 2026, and then substantially reframed as a systems contribution for
+      ACM UIST 2026 (under review). Each iteration added depth: more distance metrics, GNN and
+      CNN baselines, and a Streamlit dashboard for interactive exploration.
     </p>
     <p class="text-[#8b949e] leading-relaxed">
-      The motivating question: can subtle, unconscious movement patterns — the way someone moves
-      their arms during admiration, or their lower body during fear — predict where they fall on
-      dimensions like social cognition or autistic-trait load? KineSig is the infrastructure for
-      testing that hypothesis at scale.
+      The pipeline processes pose data from 108 actors performing 12 distinct emotions (approximately
+      1.6 million frames) and asks whether subtle, unconscious movement patterns predict where
+      someone falls on dimensions like social cognition or autistic-trait load.
     </p>
   </section>
 
