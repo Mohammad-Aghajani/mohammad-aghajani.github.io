@@ -1,0 +1,147 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import '../../styles/global.css';
+---
+<ProjectLayout
+  title="KineSig"
+  description="KineSig: an end-to-end pipeline for behavioral phenotyping from human kinematic data."
+>
+
+  <!-- Header -->
+  <div class="mb-12">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="tag">2021 – present</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">UIST 2026 — Under Review</span>
+      <span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">GNN</span><span class="tag">DTW</span>
+    </div>
+    <h1 class="text-4xl font-bold gradient-text mb-3">KineSig</h1>
+    <p class="text-[#8b949e] text-lg leading-relaxed max-w-2xl">
+      An end-to-end computational pipeline for extracting behavioral signatures from
+      human movement and linking them to psychological traits.
+    </p>
+  </div>
+
+  <!-- Overview -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Overview</h2>
+    <p class="text-[#8b949e] leading-relaxed mb-3">
+      KineSig (Kinematic Behavior Classification) processes pose data from 108 actors performing
+      12 distinct emotions — approximately 1.6 million frames total, captured via OpenPose and MediaPipe.
+      The pipeline computes velocity and acceleration time series for each body region, builds
+      pairwise distance matrices across participants, clusters them, and tests whether cluster
+      membership predicts scores on autism-relevant psychometric instruments.
+    </p>
+    <p class="text-[#8b949e] leading-relaxed">
+      The motivating question: can subtle, unconscious movement patterns — the way someone moves
+      their arms during admiration, or their lower body during fear — predict where they fall on
+      dimensions like social cognition or autistic-trait load? KineSig is the infrastructure for
+      testing that hypothesis at scale.
+    </p>
+  </section>
+
+  <!-- Pipeline -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-4">Pipeline</h2>
+    <div class="space-y-4">
+      <div class="flex gap-4">
+        <div class="flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center text-sky-400 text-sm font-bold shrink-0">1</div>
+          <div class="w-px flex-1 bg-[#30363d] mt-2"></div>
+        </div>
+        <div class="pb-4">
+          <h3 class="font-medium text-white mb-1">Pose Extraction</h3>
+          <p class="text-[#8b949e] text-sm leading-relaxed">OpenPose and MediaPipe extract skeleton landmarks per frame across 12 emotions (admiration, anger, despair, disgust, envy, fear, guilt, happiness, pride, sadness, shame, surprise). Raw landmark coordinates are stored for downstream processing.</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center text-sky-400 text-sm font-bold shrink-0">2</div>
+          <div class="w-px flex-1 bg-[#30363d] mt-2"></div>
+        </div>
+        <div class="pb-4">
+          <h3 class="font-medium text-white mb-1">Kinematic Feature Extraction</h3>
+          <p class="text-[#8b949e] text-sm leading-relaxed">Per body region of interest (head, upper extremity, lower extremity, full body), velocity and acceleration time series are computed with Savitzky-Golay smoothing. Entropy and AUC features are derived per actor per emotion.</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center text-sky-400 text-sm font-bold shrink-0">3</div>
+          <div class="w-px flex-1 bg-[#30363d] mt-2"></div>
+        </div>
+        <div class="pb-4">
+          <h3 class="font-medium text-white mb-1">Distance Matrices</h3>
+          <p class="text-[#8b949e] text-sm leading-relaxed">Pairwise participant similarity is computed under four metrics: DTW, Soft-DTW, Euclidean, and Cosine. Each metric produces a 108×108 distance matrix per emotion per region — a rich representational space for clustering.</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center text-sky-400 text-sm font-bold shrink-0">4</div>
+          <div class="w-px flex-1 bg-[#30363d] mt-2"></div>
+        </div>
+        <div class="pb-4">
+          <h3 class="font-medium text-white mb-1">Clustering</h3>
+          <p class="text-[#8b949e] text-sm leading-relaxed">K-means and hierarchical clustering with silhouette score optimization determine the number of clusters k. MDS plots visualize participant groupings. Cosine distance at k=4 showed the most stable cluster structure across runs.</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <div class="flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center text-sky-400 text-sm font-bold shrink-0">5</div>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Psychometric Correlation</h3>
+          <p class="text-[#8b949e] text-sm leading-relaxed">Mixed-effects models (R, lme4) test whether cluster membership predicts AQ (Autism Quotient), RMET (Reading the Mind in the Eyes), and TIPI personality scores. BH/FDR correction applied across comparisons. Key replicating effect: admiration / lower-extremity acceleration vs RMET (q ≤ 0.05).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Neural Baselines -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Neural Baselines</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed mb-3">
+      Graph neural network and CNN baselines (PyTorch) treat each actor's pose sequence as a
+      graph — body joints as nodes, biomechanical connections as edges — and learn to predict
+      psychometric scores directly. These are compared against the unsupervised clustering approach
+      to assess whether supervised feature learning improves over interpretable kinematic features.
+    </p>
+    <p class="text-[#8b949e] text-sm leading-relaxed">
+      A ST-GCN (Spatial-Temporal Graph Convolutional Network) baseline was also tested using
+      pre-trained embeddings as input features to the clustering pipeline.
+    </p>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Streamlit Dashboard</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed">
+      An interactive Streamlit app exposes the full pipeline results across six tabs: time series
+      visualization, distance matrix heatmaps, MDS cluster plots, boxplots of psychometric scores
+      by cluster, statistical summary tables, and per-actor kinematic profiles. Designed for
+      iterative exploration — changing emotion, region, metric, or k updates all views.
+    </p>
+  </section>
+
+  <!-- Tech stack -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Tech Stack</h2>
+    <div class="flex flex-wrap gap-2">
+      {['Python', 'PyTorch', 'NumPy', 'SciPy', 'pandas', 'scikit-learn', 'DTW', 'Soft-DTW',
+        'MediaPipe', 'OpenPose', 'R', 'lme4', 'Streamlit', 'matplotlib'].map(t => (
+        <span class="tag">{t}</span>
+      ))}
+    </div>
+  </section>
+
+  <!-- Publication -->
+  <section class="card">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Publication</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed mb-2">
+      <strong class="text-white">KineSig: A System for Operationalizing Human Behavioral State from Interpretable Movement Signatures</strong><br/>
+      Mohammad Aghajani, Gregory Lewis, Mark Jaime — <em>ACM UIST 2026</em> (under review)
+    </p>
+    <p class="text-[#8b949e] text-sm leading-relaxed">
+      Related: <a href="https://doi.org/10.3389/fnint.2024.1364249" target="_blank" class="text-sky-400 hover:underline">Lewis et al. (2024), Frontiers in Integrative Neuroscience ↗</a>
+    </p>
+  </section>
+
+</ProjectLayout>

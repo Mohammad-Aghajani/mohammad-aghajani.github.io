@@ -1,0 +1,109 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import '../../styles/global.css';
+---
+<ProjectLayout
+  title="Game of Tell"
+  description="Game of Tell: a two-player deception study using synchronized face video and physiological signals."
+>
+
+  <div class="mb-12">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="tag">2021 – present</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-[#8b949e]/10 text-[#8b949e] border border-[#30363d]">IRB Approved</span>
+      <span class="tag">PsychoPy</span><span class="tag">rPPG</span><span class="tag">OpenFace</span>
+    </div>
+    <h1 class="text-4xl font-bold gradient-text mb-3">Game of Tell</h1>
+    <p class="text-[#8b949e] text-lg leading-relaxed max-w-2xl">
+      A two-player card game designed to study deception, combining face video, remote
+      photoplethysmography, and behavioral event logging to model lying and lie detection.
+    </p>
+  </div>
+
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Motivation</h2>
+    <p class="text-[#8b949e] leading-relaxed mb-3">
+      Inspired by Pinti et al. (2021), who used fNIRS to show that anterior prefrontal cortex
+      activity couples between players during a card-game deception task. Their paradigm required
+      an fNIRS lab; this study replaces brain imaging with face video and remote PPG — signals
+      that can eventually be captured anywhere with a webcam.
+    </p>
+    <p class="text-[#8b949e] leading-relaxed">
+      The core question: can observable behavioral and physiological signals — facial micro-expressions,
+      head pose, gaze, and heart rate changes — reveal who is lying, who detects a lie, and whether
+      the two players' bodies synchronize during a deceptive exchange?
+    </p>
+  </section>
+
+  <!-- The Game -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">The Paradigm</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed mb-4">
+      A PsychoPy card game with two roles that alternate each block:
+    </p>
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d]">
+        <h3 class="font-medium text-white mb-2 text-sm">Informer</h3>
+        <p class="text-[#8b949e] text-xs leading-relaxed">Picks a face-down card, then claims it is "Higher" or "Lower" than the Guesser's card — truthfully or as a lie. Wins by successfully deceiving the Guesser.</p>
+      </div>
+      <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d]">
+        <h3 class="font-medium text-white mb-2 text-sm">Guesser</h3>
+        <p class="text-[#8b949e] text-xs leading-relaxed">Adjusts a wager (w+/w-), commits ("finish wager"), then guesses "Truth" or "Lie." Wager magnitude determines points won or lost on a correct/incorrect detection.</p>
+      </div>
+    </div>
+    <p class="text-[#8b949e] text-sm leading-relaxed">
+      Structure: multiple blocks of 6 trials each. 7 trial outcome types: TT, TF, FT, FF (Truth/False × detected/missed) plus instructed conditions (I-T, I-LT, I-LF). Roles swap every block.
+    </p>
+  </section>
+
+  <!-- Data Collected -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-4">Data Per Session</h2>
+    <div class="space-y-2 text-sm">
+      {[
+        ['Face video', 'MP4 recording per player, synchronized to game events'],
+        ['rPPG / PhysioCam', 'IBI, RSA magnitude, heart rate, raw RGB channels (b, g, r) at ~30fps'],
+        ['OpenFace output', 'Facial AUs (intensity + presence), head pose (pitch/yaw/roll), gaze direction, 2D/3D landmarks'],
+        ['PsychoPy event log (stamped)', 'Every button press and game event with game-clock timestamp (seconds)'],
+        ['PsychoPy trial log (unstamped)', 'Outcome per trial: cards, claim, truth/lie, winner, running scores'],
+        ['Timekeeping CSV', 'Clock alignment anchors — physio instance start times + game start time (Unix epoch)'],
+        ['Session metadata', 'JSON: experiment ID, player names, Unix timestamps, dilemma type, final scores'],
+      ].map(([k, v]) => (
+        <div class="flex gap-3">
+          <span class="text-sky-400 shrink-0 w-44">{k}</span>
+          <span class="text-[#8b949e]">{v}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Analysis -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Analysis Goals</h2>
+    <ul class="space-y-2 text-sm text-[#8b949e]">
+      <li class="flex gap-2"><span class="text-sky-400 shrink-0">•</span> AU and physiological changes on Lie vs. Truth trials (epoch-locked to trial events)</li>
+      <li class="flex gap-2"><span class="text-sky-400 shrink-0">•</span> Inter-player physiological synchrony using cross-correlation and Hilbert phase analysis</li>
+      <li class="flex gap-2"><span class="text-sky-400 shrink-0">•</span> Whether gaze, head pose, or AU features predict whether the Guesser will detect the lie</li>
+      <li class="flex gap-2"><span class="text-sky-400 shrink-0">•</span> Connection to NIH R21 facial micro-movement aims: validating FMM pipeline on naturalistic face video</li>
+    </ul>
+  </section>
+
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Dataset</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed">
+      3 pilot dyads (December 2021) + 5 regular dyads (March–April 2022) + Subject 42 (February 2023).
+      All sessions IRB-approved. Data organized by subject with standardized file structure from Sub042 onward.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Tech Stack</h2>
+    <div class="flex flex-wrap gap-2">
+      {['PsychoPy', 'Python', 'OpenFace', 'PhysioCam', 'rPPG', 'pandas', 'NumPy',
+        'cross-correlation', 'Hilbert transform'].map(t => (
+        <span class="tag">{t}</span>
+      ))}
+    </div>
+  </section>
+
+</ProjectLayout>

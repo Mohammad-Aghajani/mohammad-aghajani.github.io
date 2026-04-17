@@ -1,0 +1,104 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import '../../styles/global.css';
+---
+<ProjectLayout
+  title="BRiscOS"
+  description="BRiscOS: an educational RISC-V microkernel OS in C and assembly, built as teaching infrastructure for Indiana University's OS course."
+>
+
+  <div class="mb-12">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="tag">2025 – present</span>
+      <span class="tag">C (gnu2x)</span><span class="tag">RISC-V 64</span><span class="tag">QEMU</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-400/10 text-indigo-400 border border-indigo-400/20">Teaching Infrastructure</span>
+    </div>
+    <h1 class="text-4xl font-bold gradient-text mb-3">BRiscOS</h1>
+    <p class="text-[#8b949e] text-lg leading-relaxed max-w-2xl">
+      An educational microkernel OS built from scratch in C and RISC-V assembly,
+      developed as the core artifact for Indiana University's Operating Systems course.
+    </p>
+  </div>
+
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Overview</h2>
+    <p class="text-[#8b949e] leading-relaxed mb-3">
+      BRiscOS gives students hands-on experience with every layer of a real operating system:
+      bootstrapping in machine mode, exception handling in supervisor mode, and user-space programs
+      communicating with the kernel via system calls. Students build the OS incrementally through
+      12 milestones, each adding a new subsystem.
+    </p>
+    <p class="text-[#8b949e] leading-relaxed">
+      The system targets QEMU (RISC-V 64-bit), uses a SCons-based build system, and is structured
+      to support automated grading and GDB-based debugging throughout. As Lab Instructor, the role
+      involved designing and maintaining this codebase, writing instructional materials, and guiding
+      students through kernel-level debugging.
+    </p>
+  </section>
+
+  <!-- Architecture -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-4">Privilege Architecture</h2>
+    <div class="space-y-4">
+      {[
+        ['Machine Mode', 'bootstrap.s (_boothdr → _start)', 'Sets up CSRs and interrupt vectors; delegates to supervisor mode. First code to run on boot.'],
+        ['Supervisor Mode', 'kernel/core/start.c', 'Exception handling, device drivers (UART), syscall dispatch. The kernel lives here.'],
+        ['User Mode', 'user/apps/system.c (user_run)', 'Analogous to PID 0 / init in Linux. Starts the shell and initializes the user heap.'],
+      ].map(([mode, file, desc]) => (
+        <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d]">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-xs px-2 py-0.5 rounded-full bg-sky-400/10 text-sky-400 border border-sky-400/20 font-medium">{mode}</span>
+            <code class="text-xs text-[#8b949e] font-mono">{file}</code>
+          </div>
+          <p class="text-[#8b949e] text-sm leading-relaxed">{desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Subsystems -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-4">Subsystems (12 Milestones)</h2>
+    <div class="grid md:grid-cols-2 gap-3 text-sm">
+      {[
+        ['UART Driver', 'Polling and interrupt-driven serial I/O; character-level transmit/receive.'],
+        ['Interrupt Handling', 'Machine/supervisor trap vectors; exception classification and dispatch.'],
+        ['Thread Scheduler', 'Round-robin and priority-based scheduling; context switching in assembly.'],
+        ['Futex / Synchronization', 'Futex-based mutex and condition variable primitives for user threads.'],
+        ['Memory Allocator', 'Dynamic malloc with first-fit and coalescing free; sbrk-style heap expansion.'],
+        ['Ramdisk Filesystem', 'Simple block-based ramdisk with file creation, read, write, and directory listing.'],
+        ['Syscall Interface', 'User-to-kernel transition via ecall; syscall table dispatch.'],
+        ['User Shell', 'A minimal interactive shell running in user mode as a thread spawned by user_run.'],
+      ].map(([name, desc]) => (
+        <div class="bg-[#0d1117] rounded-lg p-3 border border-[#30363d]">
+          <h3 class="font-medium text-white mb-1">{name}</h3>
+          <p class="text-[#8b949e] text-xs leading-relaxed">{desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Build system -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Build System</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed mb-3">SCons (Python-based). Key commands:</p>
+    <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d] font-mono text-xs space-y-1 text-[#8b949e]">
+      <div><span class="text-sky-400">scons build</span>         — Compile kernel</div>
+      <div><span class="text-sky-400">scons run</span>           — Run in QEMU (U-Boot mode)</div>
+      <div><span class="text-sky-400">scons run --mode=debug</span> — Run with GDB server</div>
+      <div><span class="text-sky-400">scons gdb</span>           — Connect GDB to running kernel</div>
+      <div><span class="text-sky-400">scons test</span>          — Build and run unit tests</div>
+      <div><span class="text-sky-400">scons checkout milestone=N</span> — Generate milestone N template</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Tech Stack</h2>
+    <div class="flex flex-wrap gap-2">
+      {['C (gnu2x)', 'RISC-V 64-bit Assembly', 'QEMU', 'SCons', 'GDB', 'Linux', 'Python'].map(t => (
+        <span class="tag">{t}</span>
+      ))}
+    </div>
+  </section>
+
+</ProjectLayout>

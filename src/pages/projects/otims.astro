@@ -1,0 +1,110 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import '../../styles/global.css';
+---
+<ProjectLayout
+  title="OTIMS"
+  description="OTIMS: a deployed Flask web platform for remote behavioral data collection and automated landmark extraction."
+>
+
+  <div class="mb-12">
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <span class="tag">2024 – present</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 border border-green-400/20">IU Seed Grant — Funded</span>
+      <span class="tag">Flask</span><span class="tag">MediaPipe</span><span class="tag">Production</span>
+    </div>
+    <h1 class="text-4xl font-bold gradient-text mb-3">OTIMS</h1>
+    <p class="text-[#8b949e] text-lg leading-relaxed max-w-2xl">
+      A deployed web platform for collecting behavioral data from remote participants
+      and running automated facial and pose landmark extraction at scale.
+    </p>
+  </div>
+
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Overview</h2>
+    <p class="text-[#8b949e] leading-relaxed mb-3">
+      OTIMS is the research infrastructure for a seed-grant-funded study on facial mimicry
+      in children. Participants complete the Face Matching Memory (FMM) protocol entirely
+      through a browser — no lab visit, no experimenter presence. The platform handles consent
+      routing, session management, webcam video recording, automated upload, and landmark extraction.
+    </p>
+    <p class="text-[#8b949e] leading-relaxed">
+      Built from scratch and running in production with Nginx and Gunicorn, OTIMS is a practical
+      demonstration of how research software can be both scientifically rigorous and accessible
+      to participants outside the lab.
+    </p>
+  </section>
+
+  <!-- Participant Flow -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-4">Participant Flow</h2>
+    <div class="space-y-3">
+      {[
+        ['Landing page', 'Participant arrives, receives study information. Server mints a unique study_id token.'],
+        ['Qualtrics survey', 'Redirected to external survey (consent + demographics). study_id is passed as URL parameter.'],
+        ['Return & validation', 'After survey, Qualtrics redirects back to /survey/return. Token is validated, participant record created, session initialized.'],
+        ['FMM blocks (6 total)', 'Participant completes baseline → passive emotion A → active/copy emotion A → non-social shapes → passive emotion B → active/copy emotion B. Fear/surprise pair order is randomized per session.'],
+        ['Video upload', 'Each block video uploads automatically to the server as the task completes. No manual transfer needed.'],
+        ['Completion', 'Completion page displays study_id as payment code. Admins can monitor progress in real time via /monitoring.'],
+      ].map(([step, desc]) => (
+        <div class="flex gap-3">
+          <span class="text-sky-400 font-semibold text-sm shrink-0 mt-0.5 w-36">{step}</span>
+          <p class="text-[#8b949e] text-sm leading-relaxed">{desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Landmark Extraction -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Automated Landmark Extraction</h2>
+    <p class="text-[#8b949e] text-sm leading-relaxed mb-4">
+      Once videos are collected, the extraction pipeline runs three complementary tools:
+    </p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d]">
+        <h3 class="font-medium text-white mb-1 text-sm">MediaPipe</h3>
+        <p class="text-[#8b949e] text-xs leading-relaxed">478-point face mesh + full body pose landmarks per frame. Used for tracking facial geometry and head pose over time.</p>
+      </div>
+      <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d]">
+        <h3 class="font-medium text-white mb-1 text-sm">OpenFace</h3>
+        <p class="text-[#8b949e] text-xs leading-relaxed">Facial Action Units (AUs), head pose (pitch/yaw/roll), and gaze direction. Provides interpretable facial expression features for analysis.</p>
+      </div>
+      <div class="bg-[#0d1117] rounded-lg p-4 border border-[#30363d]">
+        <h3 class="font-medium text-white mb-1 text-sm">DeepFace</h3>
+        <p class="text-[#8b949e] text-xs leading-relaxed">Emotion classification and face identity features. Provides a DL-based complementary signal to rule-based AU features.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="card mb-6">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Architecture</h2>
+    <div class="space-y-2 text-sm">
+      {[
+        ['Web framework', 'Flask (Python)'],
+        ['Database', 'SQLite — participant records, session state, block completion tracking'],
+        ['Frontend', 'Vanilla JS + HTML/CSS — webcam capture via MediaDevices API'],
+        ['Server', 'Nginx (reverse proxy, HTTPS termination) + Gunicorn (WSGI)'],
+        ['Admin', '/monitoring and /admin routes with login-gated access'],
+        ['Data export', 'Structured export of video files and QC logs organized by study_id'],
+      ].map(([k, v]) => (
+        <div class="flex gap-3">
+          <span class="text-[#8b949e] w-32 shrink-0">{k}</span>
+          <span class="text-[#c9d1d9]">{v}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="text-lg font-semibold text-sky-400 mb-3">Tech Stack</h2>
+    <div class="flex flex-wrap gap-2">
+      {['Python', 'Flask', 'SQLite', 'Nginx', 'Gunicorn', 'MediaPipe', 'OpenFace',
+        'DeepFace', 'JavaScript', 'HTML/CSS', 'Linux'].map(t => (
+        <span class="tag">{t}</span>
+      ))}
+    </div>
+  </section>
+
+</ProjectLayout>

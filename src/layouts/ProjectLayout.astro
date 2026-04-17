@@ -1,0 +1,63 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <title>{title} — Mohammad Aghajani</title>
+  <style>
+    @import url('../styles/global.css');
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(56,189,248,0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 0%, #38bdf8 60%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    section, nav, main, footer { position: relative; z-index: 1; }
+  </style>
+</head>
+<body class="min-h-screen" style="background:#0d1117;color:#e6edf3;font-family:'Inter',system-ui,sans-serif;">
+
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0d1117]/80 backdrop-blur border-b border-[#21262d]">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+      <a href="/" class="flex items-center gap-2 text-[#8b949e] hover:text-sky-400 transition-colors text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Back
+      </a>
+      <span class="text-[#30363d]">/</span>
+      <span class="text-[#8b949e] text-sm">Projects</span>
+      <span class="text-[#30363d]">/</span>
+      <span class="text-white text-sm font-medium">{title}</span>
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-6 pt-28 pb-24">
+    <slot />
+  </main>
+
+  <footer class="border-t border-[#21262d] py-8 px-6 text-center text-[#8b949e] text-sm relative z-10">
+    <p>Mohammad Aghajani · Intelligent Systems Engineering · Indiana University Bloomington</p>
+  </footer>
+
+</body>
+</html>
